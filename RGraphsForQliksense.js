@@ -6,10 +6,78 @@ define( ["qlik"
 		,"./libraries/RGraph.pie"
 		],
 function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonPie) {
-
+var palette = [
+		 '#2196f3'
+		,'#e3f2fd'
+		,'#bbdefb'
+		,'#90caf9'
+		,'#64b5f6'
+		,'#42a5f5'
+		,'#1e88e5'
+		,'#1976d2'
+		,'#1565c0'
+		,'#0d47a1'
+		,'#82b1ff'
+		,'#448aff'
+		,'#2979ff'
+		,'#2962ff'
+		,'#4caf50'
+		,'#e8f5e9'
+		,'#c8e6c9'
+		,'#a5d6a7'
+		,'#81c784'
+		,'#66bb6a'
+		,'#43a047'
+		,'#388e3c'
+		,'#2e7d32'
+		,'#1b5e20'
+		,'#b9f6ca'
+		,'#69f0ae'
+		,'#00e676'
+		,'#00c853'
+		,'#3f51b5'
+		,'#e8eaf6'
+		,'#c5cae9'
+		,'#9fa8da'
+		,'#7986cb'
+		,'#5c6bc0'
+		,'#3949ab'
+		,'#303f9f'
+		,'#283593'
+		,'#1a237e'
+		,'#8c9eff'
+		,'#536dfe'
+		,'#3d5afe'
+		,'#304ffe'
+		,'#9c27b0'
+		,'#f3e5f5'
+		,'#e1bee7'
+		,'#ce93d8'
+		,'#ba68c8'
+		,'#ab47bc'
+		,'#8e24aa'
+		,'#7b1fa2'
+		,'#6a1b9a'
+		,'#4a148c'
+		,'#ea80fc'
+		,'#e040fb'
+		,'#d500f9'
+		,'#aa00ff'
+		,'#607d8b'
+		,'#eceff1'
+		,'#cfd8dc'
+		,'#b0bec5'
+		,'#90a4ae'
+		,'#78909c'
+		,'#546e7a'
+		,'#455a64'
+		,'#37474f'
+		,'#263238'
+];
 	return {
 		initialProperties : {
 			version: 1.0,
+			selectionMode : "CONFIRM",
 			qHyperCubeDef : {
 				qDimensions : [],
 				qMeasures : [],
@@ -18,6 +86,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonPie) {
 					qHeight : 50
 				}]
 			}
+			
 		},
 		definition : {	
 			type: "items",
@@ -32,9 +101,13 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonPie) {
 					uses: "measures",
 					min: 1,
 					max: 1
+				},
+				settings : {
+					uses : "settings"									
 				}
 			}
 		},
+	
 		support : {
 			snapshot: true,
 			export: true,
@@ -110,6 +183,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonPie) {
 					tooltipsEvent: 'onmousemove',
 					//labels: dimArray,						
 					//colors: ['red','yellow','blue','cyan','green','pink','white','#aaa'],
+					colors: palette,
 					variant: 'pie3d',
 					radius: 100,
 					labelsSticksList: true,
@@ -118,7 +192,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonPie) {
 					shadowOffsety: 5,
 					shadowColor: '#aaa',
 					exploded: [,,8],
-					textAccessible: false,
+					textAccessible: true,
 					eventsClick: onClickDimension
 					//eventsMousemove: onMouseMove,
 				}
