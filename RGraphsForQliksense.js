@@ -102,8 +102,41 @@ var palette = [
 					min: 1,
 					max: 1
 				},
+				sorting: {
+					uses: "sorting"
+				},
 				settings : {
-					uses : "settings"									
+					uses : "settings",
+					items: {
+						chartLabels: {
+							type: "boolean",
+							component: "switch",
+							label: "Chart Labels",
+							ref: "chartLabels",
+							options: [{
+								value: true,
+								label: "On"
+							}, {
+								value: false,
+								label: "Off"
+							}],
+							defaultValue: true
+						},
+						labelSticks: {
+							type: "boolean",
+							component: "switch",
+							label: "Labels Sticks",
+							ref: "labelSticks",
+							options: [{
+								value: true,
+								label: "On"
+							}, {
+								value: false,
+								label: "Off"
+							}],
+							defaultValue: true
+						}						
+					}									
 				}
 			}
 		},
@@ -139,7 +172,7 @@ var palette = [
 				dimArray[i] = layout.qHyperCube.qDataPages[0].qMatrix[i][0].qText;
 				measArray[i] = layout.qHyperCube.qDataPages[0].qMatrix[i][1].qText;
 			}
-
+			
 			
 			var dimensionLength=layout.qHyperCube.qDataPages[0].qMatrix.length;
 			
@@ -168,6 +201,12 @@ var palette = [
 			
 			$element.html(html);
 			
+			if (layout.chartLabels) {
+				var labelsArray = dimArray;
+			} else {
+				var labelsArray = [];
+			}
+			layout.labelSticks
 
 			var pie = new RGraph.Pie({
 				id: 'cvs',
@@ -177,22 +216,20 @@ var palette = [
 					gutterRight: 50,
 					linewidth: 0,
 					strokestyle: 'rgba(0,0,0,0)',
-					//tooltips: ['Alvin','Pete','Hoolio','Jack','Kev','Luis','Lou','Jesse'],
-					//labels: ['Alvin','Pete','Hoolio','Jack','Kev','Luis','Lou','Jesse'],
 					tooltips: dimArray,
-					tooltipsEvent: 'onmousemove',
-					//labels: dimArray,						
-					//colors: ['red','yellow','blue','cyan','green','pink','white','#aaa'],
+					tooltipsEvent: 'onmousemove',					
+					labels: labelsArray,						
 					colors: palette,
 					variant: 'pie3d',
 					radius: 100,
-					labelsSticksList: true,
-					labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
+					labelsSticksList: layout.labelSticks,
+					//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
+					labelsSticksColors:palette,
 					radius: 80,
 					shadowOffsety: 5,
 					shadowColor: '#aaa',
 					exploded: [,,8],
-					textAccessible: true,
+					textAccessible: false,
 					eventsClick: onClickDimension
 					//eventsMousemove: onMouseMove,
 				}
