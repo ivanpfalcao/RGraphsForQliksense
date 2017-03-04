@@ -2,7 +2,7 @@
 
 # Description
 
-  This extension provides 3D visualizations (pie charts and bar charts, for now), using the RGraph (https://www.rgraph.net)library, for Qliksense. 
+  This extension provides 3D visualizations (pie charts and bar charts, for now), using the RGraph ( https://www.rgraph.net ) library, for Qliksense. 
   
   
 # Manual
