@@ -3,44 +3,66 @@ define( ["qlik"
 		,"./libraries/RGraph.common.core"
 		,"./libraries/RGraph.common.dynamic"
 		,"./libraries/RGraph.common.tooltips"
+		//,"./libraries/RGraph.common.key"
 		,"./libraries/RGraph.pie"
+		,"./libraries/RGraph.bar"
 		],
 function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonPie) {
+var chart;
 var palette = [
-		 '#2196f3'
-		,'#e3f2fd'
-		,'#bbdefb'
-		,'#90caf9'
-		,'#64b5f6'
-		,'#42a5f5'
+		 '#2196f3' 	
+		,'#7e57c2'
+		,'#ff1744'
+		,'#9c27b0'
+		,'#00796b'
+		,'#039be5'
+		,'#4caf50'
+		,'#cddc39'	 
+		,'#448aff'
 		,'#1e88e5'
+		,'#ab47bc'
+		,'#8e24aa'
+		,'#7b1fa2'		
+		,'#f3e5f5'
 		,'#1976d2'
+		,'#90caf9'
+		,'#64b5f6'		
+		,'#e1bee7'
+		,'#ce93d8'
+		,'#ba68c8'
+				
+
+		,'#388e3c'
+		,'#2e7d32'
+		,'#1b5e20'		
 		,'#1565c0'
 		,'#0d47a1'
+		,'#a5d6a7'		 
+		,'#e3f2fd'
 		,'#82b1ff'
-		,'#448aff'
+		
 		,'#2979ff'
 		,'#2962ff'
 		,'#4caf50'
 		,'#e8f5e9'
-		,'#c8e6c9'
-		,'#a5d6a7'
-		,'#81c784'
-		,'#66bb6a'
-		,'#43a047'
-		,'#388e3c'
-		,'#2e7d32'
-		,'#1b5e20'
+		,'#c8e6c9'		
+		,'#bbdefb'
+
 		,'#b9f6ca'
 		,'#69f0ae'
 		,'#00e676'
-		,'#00c853'
+		,'#00c853'		
+		,'#42a5f5'
+
+		,'#81c784'
+		,'#66bb6a'
+		,'#43a047'
 		,'#3f51b5'
 		,'#e8eaf6'
 		,'#c5cae9'
 		,'#9fa8da'
 		,'#7986cb'
-		,'#5c6bc0'
+		
 		,'#3949ab'
 		,'#303f9f'
 		,'#283593'
@@ -50,13 +72,8 @@ var palette = [
 		,'#3d5afe'
 		,'#304ffe'
 		,'#9c27b0'
-		,'#f3e5f5'
-		,'#e1bee7'
-		,'#ce93d8'
-		,'#ba68c8'
-		,'#ab47bc'
-		,'#8e24aa'
-		,'#7b1fa2'
+
+
 		,'#6a1b9a'
 		,'#4a148c'
 		,'#ea80fc'
@@ -108,6 +125,20 @@ var palette = [
 				settings : {
 					uses : "settings",
 					items: {
+						chartTypeList: {
+							type: "string",
+							component: "dropdown",
+							label: "Chart Type",
+							ref: "chartTypeList",
+							options: [{
+								value: "3d-pie",
+								label: "3D Pie Chart"
+							}, {
+								value: "3d-bar",
+								label: "3D Bar Chart"
+							}],
+							defaultValue: "3d-pie"
+						},					
 						chartLabels: {
 							type: "boolean",
 							component: "switch",
@@ -148,7 +179,7 @@ var palette = [
 		},
 		paint: function ($element, layout) {
 			//debug propose only, please comment
-			console.log('Data returned: ', layout.qHyperCube);
+			//console.log('Data returned: ', layout.qHyperCube);
 			
 			var app = qlik.currApp(this);
 			
@@ -201,46 +232,99 @@ var palette = [
 			
 			$element.html(html);
 			
+			// Activate ou Deactivate Labels Sticks
 			if (layout.chartLabels) {
 				var labelsArray = dimArray;
 			} else {
 				var labelsArray = [];
 			}
 			layout.labelSticks
-
-			var pie = new RGraph.Pie({
-				id: 'cvs',
-				data: measArray,
-				options: {
-					gutterLeft: 50,
-					gutterRight: 50,
-					linewidth: 0,
-					strokestyle: 'rgba(0,0,0,0)',
-					tooltips: dimArray,
-					tooltipsEvent: 'onmousemove',					
-					labels: labelsArray,						
-					colors: palette,
-					variant: 'pie3d',
-					radius: 100,
-					labelsSticksList: layout.labelSticks,
-					//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
-					labelsSticksColors:palette,
-					radius: 80,
-					shadowOffsety: 5,
-					shadowColor: '#aaa',
-					exploded: [,,8],
-					textAccessible: false,
-					eventsClick: onClickDimension
-					//eventsMousemove: onMouseMove,
-				}
-			}).draw();		
 			
+			/*try {
+				chart.Clear();
+			}
+			catch(err) {
+			}		
+			*/
+			RGraph.Reset(document.getElementById('cvs'));
+			
+			
+			switch(layout.chartTypeList) {
+				// Draws 3d pie chart
+				case "3d-pie":
+					chart = new RGraph.Pie({
+						id: 'cvs',
+						data: measArray,
+						options: {
+							gutterLeft: 50,
+							gutterRight: 50,
+							linewidth: 0,
+							strokestyle: 'rgba(0,0,0,0)',
+							tooltips: dimArray,
+							tooltipsEvent: 'onmousemove',					
+							labels: labelsArray,						
+							colors: palette,
+							variant: 'pie3d',
+							radius: 100,
+							labelsSticksList: layout.labelSticks,
+							//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
+							labelsSticksColors:palette,
+							radius: 80,
+							shadowOffsety: 5,
+							shadowColor: '#aaa',
+							exploded: [,,8],
+							textAccessible: false,
+							eventsClick: onClickDimension
+							//eventsMousemove: onMouseMove,
+						}
+					}).draw();
+					break;
+				case "3d-bar":
+					chart = new RGraph.Bar({
+						id: 'cvs',
+						data: measArray,
+						options: {
+							textAccessible: true,
+							variant: '3d',
+							variantThreedAngle: 0.1,
+							strokestyle: 'rgba(0,0,0,0)',
+							colors: palette,
+							gutterTop: 5,
+							gutterLeft: 5,
+							gutterRight: 15,
+							gutterBottom: 50,
+							labels: dimArray,
+							//tooltips: dimArray,
+							shadowColor:'#ccc',
+							shadowOffsetx: 3,
+							backgroundGridColor: '#eee',
+							scaleZerostart: true,
+							axisColor: '#ddd',
+							//unitsPost: 'km',
+							//title: 'Distance run in the past week',
+							//key: ['John','Kevin','Lucy'],
+							keyShadow: true,
+							keyShadowColor: '#ccc',
+							keyShadowOffsety: 0,
+							keyShadowOffsetx: 3,
+							keyShadowBlur: 15,
+							eventsClick: onClickDimension
+						}
+					}).draw();				
+					break;
+			}
+			
+			
+			
+			
+			// On Click actions
 			function onClickDimension (e, shape)
 			{
 				var index = shape.index;
 				app.field(dimensionName).toggleSelect(dimArray[index], true);
 			}	
-
+			
+			// On Mouse Over actions
 			function onMouseMove (e, shape)
 			{
 				var index = shape.index;
