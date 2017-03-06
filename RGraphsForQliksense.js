@@ -3,11 +3,12 @@ define( ["qlik"
 		,"./libraries/RGraph.common.core"
 		,"./libraries/RGraph.common.dynamic"
 		,"./libraries/RGraph.common.tooltips"
+		,"./libraries/RGraph.common.resizing"		
 		//,"./libraries/RGraph.common.key"
 		,"./libraries/RGraph.pie"
 		,"./libraries/RGraph.bar"
 		],
-function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonPie) {
+function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, RPie, RBar) {
 var chart;
 var palette = [
 		 '#2196f3' 	
@@ -166,12 +167,69 @@ var palette = [
 								label: "Off"
 							}],
 							defaultValue: true
-						}						
+						},
+						labelsSticksLength: {
+							type: "number",
+							component: "slider",
+							label: "Labels Sticks Length",
+							ref: "labelsSticksLength",
+							min: 0,
+							max: 10,
+							step: 1,
+							defaultValue: 5
+						},
+						labelsSticksLinewidth: {
+							type: "number",
+							component: "slider",
+							label: "Labels Sticks Width",
+							ref: "labelsSticksLinewidth",
+							min: 1,
+							max: 15,
+							step: 1,
+							defaultValue: 7
+						},
+						
+						radiusValue: {
+							type: "number",
+							component: "slider",
+							label: "3D-Pie Radius",
+							ref: "radiusValue",
+							min: 1,
+							max: 200,
+							step: 1,
+							defaultValue: 100
+						},
+						
+						
+
+						textFontSize: {
+							type: "number",
+							component: "slider",
+							label: "Font Size ",
+							ref: "textFontSize",
+							min: 1,
+							max: 30,
+							step: 1,
+							defaultValue: 10
+						},
+						labelBold: {
+							type: "boolean",
+							component: "switch",
+							label: "Labels Bold",
+							ref: "labelBold",
+							options: [{
+								value: true,
+								label: "On"
+							}, {
+								value: false,
+								label: "Off"
+							}],
+							defaultValue: false
+						}				
 					}									
 				}
 			}
 		},
-	
 		support : {
 			snapshot: true,
 			export: true,
@@ -228,7 +286,7 @@ var palette = [
 			var html = '';
 			
 			var width = $element.width(), height = $element.height();
-			html+='<div id="canvas-wrapper"><canvas id="cvs" width="'+width+'" height="'+height+'">[No canvas support]</canvas></div>';
+			html+='<div id="canvas-wrapper"><canvas align="center" id="cvs" width="'+(width)+'" height="'+(height)+'">[No canvas support]</canvas></div>';
 			
 			$element.html(html);
 			
@@ -238,7 +296,7 @@ var palette = [
 			} else {
 				var labelsArray = [];
 			}
-			layout.labelSticks
+			
 			
 			/*try {
 				chart.Clear();
@@ -265,15 +323,23 @@ var palette = [
 							labels: labelsArray,						
 							colors: palette,
 							variant: 'pie3d',
-							radius: 100,
-							labelsSticksList: layout.labelSticks,
+							//radius: 100,
 							//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
 							labelsSticksColors:palette,
-							radius: 80,
+							radius: layout.radiusValue,
 							shadowOffsety: 5,
 							shadowColor: '#aaa',
 							exploded: [,,8],
 							textAccessible: false,
+							resizable: true,
+							labelsSticksList: layout.labelSticks,
+							
+							labelsSticksLength: layout.labelsSticksLength,
+							labelsSticksLinewidth: layout.labelsSticksLinewidth,
+							
+							textSize:layout.textFontSize,
+							labelsBold:layout.labelBold,
+							
 							eventsClick: onClickDimension
 							//eventsMousemove: onMouseMove,
 						}
@@ -308,6 +374,9 @@ var palette = [
 							keyShadowOffsety: 0,
 							keyShadowOffsetx: 3,
 							keyShadowBlur: 15,
+							resizable: true,
+							textSize:layout.textFontSize,
+							labelsBold:layout.labelBold,							
 							eventsClick: onClickDimension
 						}
 					}).draw();				
