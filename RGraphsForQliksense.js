@@ -135,6 +135,9 @@ var palette = [
 								value: "3d-pie",
 								label: "3D Pie Chart"
 							}, {
+								value: "3d-donut",
+								label: "3D Donut Chart"
+							}, {
 								value: "3d-bar",
 								label: "3D Bar Chart"
 							}],
@@ -153,7 +156,37 @@ var palette = [
 								label: "Off"
 							}],
 							defaultValue: true
+						},					
+						textFontSize: {
+							type: "number",
+							component: "slider",
+							label: "Font Size ",
+							ref: "textFontSize",
+							min: 1,
+							max: 30,
+							step: 1,
+							defaultValue: 10
 						},
+						labelBold: {
+							type: "boolean",
+							component: "switch",
+							label: "Labels Bold",
+							ref: "labelBold",
+							options: [{
+								value: true,
+								label: "On"
+							}, {
+								value: false,
+								label: "Off"
+							}],
+							defaultValue: false
+						}				
+					}									
+				},
+				pieNDonutSection: {
+					component: "expandable-items",
+					label: "Pie and Donut settings",
+					items: {
 						labelSticks: {
 							type: "boolean",
 							component: "switch",
@@ -192,41 +225,14 @@ var palette = [
 						radiusValue: {
 							type: "number",
 							component: "slider",
-							label: "3D-Pie Radius",
+							label: "3D-Pie/Donut Radius",
 							ref: "radiusValue",
 							min: 1,
 							max: 200,
 							step: 1,
 							defaultValue: 100
-						},
-						
-						
-
-						textFontSize: {
-							type: "number",
-							component: "slider",
-							label: "Font Size ",
-							ref: "textFontSize",
-							min: 1,
-							max: 30,
-							step: 1,
-							defaultValue: 10
-						},
-						labelBold: {
-							type: "boolean",
-							component: "switch",
-							label: "Labels Bold",
-							ref: "labelBold",
-							options: [{
-								value: true,
-								label: "On"
-							}, {
-								value: false,
-								label: "Off"
-							}],
-							defaultValue: false
-						}				
-					}									
+						}
+					}
 				}
 			}
 		},
@@ -306,7 +312,6 @@ var palette = [
 			*/
 			RGraph.Reset(document.getElementById('cvs'));
 			
-			
 			switch(layout.chartTypeList) {
 				// Draws 3d pie chart
 				case "3d-pie":
@@ -332,19 +337,52 @@ var palette = [
 							exploded: [,,8],
 							textAccessible: false,
 							resizable: true,
-							labelsSticksList: layout.labelSticks,
-							
+							labelsSticksList: layout.labelSticks,							
 							labelsSticksLength: layout.labelsSticksLength,
-							labelsSticksLinewidth: layout.labelsSticksLinewidth,
-							
-							textSize:layout.textFontSize,
-							labelsBold:layout.labelBold,
-							
+							labelsSticksLinewidth: layout.labelsSticksLinewidth,							
+							textSize: layout.textFontSize,
+							labelsBold: layout.labelBold,							
 							eventsClick: onClickDimension
 							//eventsMousemove: onMouseMove,
 						}
 					}).draw();
 					break;
+					
+				// Draws 3d donut chart
+				case "3d-donut":
+					chart = new RGraph.Pie({
+						id: 'cvs',
+						data: measArray,
+						options: {
+							gutterLeft: 50,
+							gutterRight: 50,
+							linewidth: 0,
+							strokestyle: 'rgba(0,0,0,0)',
+							tooltips: dimArray,
+							tooltipsEvent: 'onmousemove',					
+							labels: labelsArray,						
+							colors: palette,
+							variant: 'donut3d',
+							//radius: 100,
+							//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
+							labelsSticksColors:palette,
+							radius: layout.radiusValue,
+							shadowOffsety: 5,
+							shadowColor: '#aaa',
+							exploded: [,,8],
+							textAccessible: false,
+							resizable: true,
+							labelsSticksList: layout.labelSticks,
+							labelsSticksLength: layout.labelsSticksLength,
+							labelsSticksLinewidth: layout.labelsSticksLinewidth,
+							textSize: layout.textFontSize,
+							labelsBold: layout.labelBold,
+							eventsClick: onClickDimension
+							//eventsMousemove: onMouseMove,
+						}
+					}).draw();
+					break;					
+						
 				case "3d-bar":
 					chart = new RGraph.Bar({
 						id: 'cvs',
@@ -359,7 +397,7 @@ var palette = [
 							gutterLeft: 5,
 							gutterRight: 15,
 							gutterBottom: 50,
-							labels: dimArray,
+							labels: labelsArray,
 							//tooltips: dimArray,
 							shadowColor:'#ccc',
 							shadowOffsetx: 3,
@@ -375,8 +413,8 @@ var palette = [
 							keyShadowOffsetx: 3,
 							keyShadowBlur: 15,
 							resizable: true,
-							textSize:layout.textFontSize,
-							labelsBold:layout.labelBold,							
+							textSize: layout.textFontSize,
+							labelsBold: layout.labelBold,							
 							eventsClick: onClickDimension
 						}
 					}).draw();				
