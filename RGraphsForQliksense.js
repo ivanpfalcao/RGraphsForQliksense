@@ -9,89 +9,90 @@ define( ["qlik"
 		,"./libraries/RGraph.bar"
 		],
 function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, RPie, RBar) {
-var chart;
-var palette = [
-		 '#2196f3' 	
-		,'#7e57c2'
-		,'#ff1744'
-		,'#9c27b0'
-		,'#00796b'
-		,'#039be5'
-		,'#4caf50'
-		,'#cddc39'	 
-		,'#448aff'
-		,'#1e88e5'
-		,'#ab47bc'
-		,'#8e24aa'
-		,'#7b1fa2'		
-		,'#f3e5f5'
-		,'#1976d2'
-		,'#90caf9'
-		,'#64b5f6'		
-		,'#e1bee7'
-		,'#ce93d8'
-		,'#ba68c8'
-				
+	'use strict';
+	var chart;
+	var palette = [
+			 '#2196f3' 	
+			,'#7e57c2'
+			,'#ff1744'
+			,'#9c27b0'
+			,'#00796b'
+			,'#039be5'
+			,'#4caf50'
+			,'#cddc39'	 
+			,'#448aff'
+			,'#1e88e5'
+			,'#ab47bc'
+			,'#8e24aa'
+			,'#7b1fa2'		
+			,'#f3e5f5'
+			,'#1976d2'
+			,'#90caf9'
+			,'#64b5f6'		
+			,'#e1bee7'
+			,'#ce93d8'
+			,'#ba68c8'
+					
 
-		,'#388e3c'
-		,'#2e7d32'
-		,'#1b5e20'		
-		,'#1565c0'
-		,'#0d47a1'
-		,'#a5d6a7'		 
-		,'#e3f2fd'
-		,'#82b1ff'
-		
-		,'#2979ff'
-		,'#2962ff'
-		,'#4caf50'
-		,'#e8f5e9'
-		,'#c8e6c9'		
-		,'#bbdefb'
+			,'#388e3c'
+			,'#2e7d32'
+			,'#1b5e20'		
+			,'#1565c0'
+			,'#0d47a1'
+			,'#a5d6a7'		 
+			,'#e3f2fd'
+			,'#82b1ff'
+			
+			,'#2979ff'
+			,'#2962ff'
+			,'#4caf50'
+			,'#e8f5e9'
+			,'#c8e6c9'		
+			,'#bbdefb'
 
-		,'#b9f6ca'
-		,'#69f0ae'
-		,'#00e676'
-		,'#00c853'		
-		,'#42a5f5'
+			,'#b9f6ca'
+			,'#69f0ae'
+			,'#00e676'
+			,'#00c853'		
+			,'#42a5f5'
 
-		,'#81c784'
-		,'#66bb6a'
-		,'#43a047'
-		,'#3f51b5'
-		,'#e8eaf6'
-		,'#c5cae9'
-		,'#9fa8da'
-		,'#7986cb'
-		
-		,'#3949ab'
-		,'#303f9f'
-		,'#283593'
-		,'#1a237e'
-		,'#8c9eff'
-		,'#536dfe'
-		,'#3d5afe'
-		,'#304ffe'
-		,'#9c27b0'
+			,'#81c784'
+			,'#66bb6a'
+			,'#43a047'
+			,'#3f51b5'
+			,'#e8eaf6'
+			,'#c5cae9'
+			,'#9fa8da'
+			,'#7986cb'
+			
+			,'#3949ab'
+			,'#303f9f'
+			,'#283593'
+			,'#1a237e'
+			,'#8c9eff'
+			,'#536dfe'
+			,'#3d5afe'
+			,'#304ffe'
+			,'#9c27b0'
 
 
-		,'#6a1b9a'
-		,'#4a148c'
-		,'#ea80fc'
-		,'#e040fb'
-		,'#d500f9'
-		,'#aa00ff'
-		,'#607d8b'
-		,'#eceff1'
-		,'#cfd8dc'
-		,'#b0bec5'
-		,'#90a4ae'
-		,'#78909c'
-		,'#546e7a'
-		,'#455a64'
-		,'#37474f'
-		,'#263238'
-];
+			,'#6a1b9a'
+			,'#4a148c'
+			,'#ea80fc'
+			,'#e040fb'
+			,'#d500f9'
+			,'#aa00ff'
+			,'#607d8b'
+			,'#eceff1'
+			,'#cfd8dc'
+			,'#b0bec5'
+			,'#90a4ae'
+			,'#78909c'
+			,'#546e7a'
+			,'#455a64'
+			,'#37474f'
+			,'#263238'
+	];
 	return {
 		initialProperties : {
 			version: 1.0,
@@ -244,6 +245,9 @@ var palette = [
 		paint: function ($element, layout) {
 			//debug propose only, please comment
 			//console.log('Data returned: ', layout.qHyperCube);
+            $element.empty();
+
+            var that = this;
 			
 			var app = qlik.currApp(this);
 			
@@ -422,21 +426,18 @@ var palette = [
 			}
 			
 			
-			
-			
 			// On Click actions
 			function onClickDimension (e, shape)
 			{
 				var index = shape.index;
-				app.field(dimensionName).toggleSelect(dimArray[index], true);
+				that.selectValues(0, [index], true);
 			}	
 			
 			// On Mouse Over actions
 			function onMouseMove (e, shape)
 			{
 				var index = shape.index;
-				//self.backendApi.selectValues(0, dimArray[index], true);
-				app.field(dimensionName).toggleSelect(dimArray[index], true);
+				that.selectValues(0, dimArray[index], true);
 			}					
 			
 			//needed for export
