@@ -232,6 +232,17 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							max: 200,
 							step: 1,
 							defaultValue: 100
+						},
+						
+						explodedSegmentDist: {
+							type: "number",
+							component: "slider",
+							label: "Exploded Segment Distance",
+							ref: "explodedSegmentDist",
+							min: 1,
+							max: 100,
+							step: 1,
+							defaultValue: 15
 						}
 					}
 				}
@@ -338,7 +349,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							radius: layout.radiusValue,
 							shadowOffsety: 5,
 							shadowColor: '#aaa',
-							exploded: [,,8],
+							//exploded: [,,8],
 							textAccessible: false,
 							resizable: true,
 							labelsSticksList: layout.labelSticks,							
@@ -346,8 +357,8 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							labelsSticksLinewidth: layout.labelsSticksLinewidth,							
 							textSize: layout.textFontSize,
 							labelsBold: layout.labelBold,							
-							eventsClick: onClickDimension
-							//eventsMousemove: onMouseMove,
+							eventsClick: onClickDimension,
+							eventsMousemove: onMouseMove
 						}
 					}).draw();
 					break;
@@ -373,7 +384,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							radius: layout.radiusValue,
 							shadowOffsety: 5,
 							shadowColor: '#aaa',
-							exploded: [,,8],
+							//exploded: [,,8],
 							textAccessible: false,
 							resizable: true,
 							labelsSticksList: layout.labelSticks,
@@ -381,8 +392,8 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							labelsSticksLinewidth: layout.labelsSticksLinewidth,
 							textSize: layout.textFontSize,
 							labelsBold: layout.labelBold,
-							eventsClick: onClickDimension
-							//eventsMousemove: onMouseMove,
+							eventsClick: onClickDimension,
+							eventsMousemove: onMouseMove
 						}
 					}).draw();
 					break;					
@@ -431,13 +442,25 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			{
 				var index = shape.index;
 				that.selectValues(0, [index], true);
+				
+				var index = shape.index;
+				var obj = shape.object;
+				obj.set('exploded', 0);
+				obj.explodeSegment(index, layout.explodedSegmentDist);
+				e.stopPropagation();
 			}	
 			
 			// On Mouse Over actions
 			function onMouseMove (e, shape)
 			{
+				/*
 				var index = shape.index;
-				that.selectValues(0, dimArray[index], true);
+				var obj = shape.object;
+				obj.set('exploded', 0);
+				obj.explodeSegment(index, 8);
+				e.stopPropagation();
+				*/
+				//that.selectValues(0, dimArray[index], true);
 			}					
 			
 			//needed for export
