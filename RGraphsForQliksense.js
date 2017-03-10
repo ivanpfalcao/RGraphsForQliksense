@@ -124,8 +124,9 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 				sorting: {
 					uses: "sorting"
 				},
-				settings : {
-					uses : "settings",
+				chartTypeDividion: {
+					component: "expandable-items",
+					label: "Chart Type",
 					items: {
 						chartTypeList: {
 							type: "string",
@@ -143,7 +144,12 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 								label: "3D Bar Chart"
 							}],
 							defaultValue: "3d-pie"
-						},					
+						}							
+					}
+				},
+				settings : {
+					uses : "settings",
+					items: {
 						chartLabels: {
 							type: "boolean",
 							component: "switch",
@@ -262,6 +268,8 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			
 			var app = qlik.currApp(this);
 			
+			var arrayExplode = [];
+			
 			// Get the Number of Dimensions and Measures on the hypercube
 			var numberOfDimensions = layout.qHyperCube.qDimensionInfo.length;
 			var numberOfMeasures = layout.qHyperCube.qMeasureInfo.length;
@@ -279,6 +287,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			var dimArray =[];
 			var measArray =[];
 			for (var i=0; i<numberOfDimValues;i++){
+				arrayExplode[i] = 0;
 				dimArray[i] = layout.qHyperCube.qDataPages[0].qMatrix[i][0].qText;
 				measArray[i] = layout.qHyperCube.qDataPages[0].qMatrix[i][1].qText;
 			}
@@ -357,8 +366,8 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							labelsSticksLinewidth: layout.labelsSticksLinewidth,							
 							textSize: layout.textFontSize,
 							labelsBold: layout.labelBold,							
-							eventsClick: onClickDimension,
-							eventsMousemove: onMouseMove
+							eventsClick: onClickDimensionPieAndDonut
+							//eventsMousemove: onMouseMove
 						}
 					}).draw();
 					break;
@@ -392,8 +401,8 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							labelsSticksLinewidth: layout.labelsSticksLinewidth,
 							textSize: layout.textFontSize,
 							labelsBold: layout.labelBold,
-							eventsClick: onClickDimension,
-							eventsMousemove: onMouseMove
+							eventsClick: onClickDimensionPieAndDonut
+							//eventsMousemove: onMouseMove
 						}
 					}).draw();
 					break;					
@@ -430,25 +439,40 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							resizable: true,
 							textSize: layout.textFontSize,
 							labelsBold: layout.labelBold,							
-							eventsClick: onClickDimension
+							eventsClick: onClickDimensionBar
 						}
 					}).draw();				
 					break;
 			}
 			
 			
-			// On Click actions
-			function onClickDimension (e, shape)
+			// On Click actions for Pie and Donut
+			function onClickDimensionPieAndDonut (e, shape)
 			{
 				var index = shape.index;
 				that.selectValues(0, [index], true);
 				
 				var index = shape.index;
 				var obj = shape.object;
-				obj.set('exploded', 0);
-				obj.explodeSegment(index, layout.explodedSegmentDist);
+
+				if(arrayExplode[index]==0){
+					arrayExplode[index] = layout.explodedSegmentDist;
+				} else {
+					arrayExplode[index] = 0;
+				}
+				obj.explodeSegment(arrayExplode, layout.explodedSegmentDist);
+				//arrayExplode[index]
+				obj.set('exploded', arrayExplode);
+				//obj.explodeSegment(index, layout.explodedSegmentDist);
 				e.stopPropagation();
-			}	
+			}
+			
+			// On Click actions for Pie and Donut
+			function onClickDimensionBar (e, shape)
+			{
+				var index = shape.index;
+				that.selectValues(0, [index], true);
+			}				
 			
 			// On Mouse Over actions
 			function onMouseMove (e, shape)
