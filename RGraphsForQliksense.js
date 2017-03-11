@@ -261,7 +261,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 		},
 		paint: function ($element, layout) {
 			//debug propose only, please comment
-			//console.log('Data returned: ', layout.qHyperCube);
+			console.log('Data returned: ', layout.qHyperCube);
             $element.empty();
 
             var that = this;
@@ -286,10 +286,11 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			// Get the values of the dimension
 			var dimArray =[];
 			var measArray =[];
+			var elementNumber = [];
 			for (var i=0; i<numberOfDimValues;i++){
-				arrayExplode[i] = 0;
 				dimArray[i] = layout.qHyperCube.qDataPages[0].qMatrix[i][0].qText;
 				measArray[i] = layout.qHyperCube.qDataPages[0].qMatrix[i][1].qText;
+				elementNumber[i] = layout.qHyperCube.qDataPages[0].qMatrix[i][0].qElemNumber;
 			}
 			
 			
@@ -320,11 +321,18 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			
 			$element.html(html);
 			
-			// Activate ou Deactivate Labels Sticks
+			// Activate ou Deactivate Labels
 			if (layout.chartLabels) {
 				var labelsArray = dimArray;
 			} else {
 				var labelsArray = [];
+			}
+			
+			var tooltipsArray = [];
+			
+			for (var i = 0; i<=dimArray.length - 1; i++){
+				tooltipsArray[i] = dimArray[i] + ": " + measArray[i];
+				//alert(i + ":" + dimArray[i])
 			}
 			
 			
@@ -347,7 +355,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							gutterRight: 50,
 							linewidth: 0,
 							strokestyle: 'rgba(0,0,0,0)',
-							tooltips: dimArray,
+							tooltips: tooltipsArray,
 							tooltipsEvent: 'onmousemove',					
 							labels: labelsArray,						
 							colors: palette,
@@ -382,7 +390,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							gutterRight: 50,
 							linewidth: 0,
 							strokestyle: 'rgba(0,0,0,0)',
-							tooltips: dimArray,
+							tooltips: tooltipsArray,
 							tooltipsEvent: 'onmousemove',					
 							labels: labelsArray,						
 							colors: palette,
@@ -422,7 +430,8 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							gutterRight: 15,
 							gutterBottom: 50,
 							labels: labelsArray,
-							//tooltips: dimArray,
+							tooltips: tooltipsArray,
+							tooltipsEvent: 'onmousemove',
 							shadowColor:'#ccc',
 							shadowOffsetx: 3,
 							backgroundGridColor: '#eee',
@@ -450,10 +459,18 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			function onClickDimensionPieAndDonut (e, shape)
 			{
 				var index = shape.index;
-				that.selectValues(0, [index], true);
-				
-				var index = shape.index;
 				var obj = shape.object;
+				
+				//alert(index + ": " + (dimensionLength-1));
+				/*if (index == dimensionLength-1) {
+					var qlikSelectionArray = 0;
+				} else {
+					var qlikSelectionArray = index+1;
+				}*/
+				
+				that.selectValues(0, elementNumber[index], false);
+				
+				
 
 				if(arrayExplode[index]==0){
 					arrayExplode[index] = layout.explodedSegmentDist;
@@ -471,7 +488,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			function onClickDimensionBar (e, shape)
 			{
 				var index = shape.index;
-				that.selectValues(0, [index], true);
+				that.selectValues(0, elementNumber[index], false);
 			}				
 			
 			// On Mouse Over actions
