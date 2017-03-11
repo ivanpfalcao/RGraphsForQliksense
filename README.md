@@ -8,7 +8,7 @@
 # Manual
   1) Add Dimensions and Measures as usual to the visualization;
   
-  2) Chart Type -> Chart Type; you may select the chart type to show;
+  2) In Appearance -> Chart Type; you may select the chart type to show;
   
   3) In Appearance -> Chart Labels; you may select if the labels will be shown or not;
   
@@ -23,10 +23,8 @@
   5) In Pie and Donut settings -> Label Sticks Width; It sets the width of the label sticks;
   
   6) In Pie and Donut settings -> 3D-Pie/Donut Radius; It sets the radius (the size) of the Pie/Donut chart;
-  
-  7) In Pie and Donut settings -> Exploded Segment Distance; It configures the distance of the selected dimensions;
 
 
 # Notes
   - This application is under development. Other functionalities will probably be added;
-  - If you have any sugestion for functionalities, please post it in the comments;
+  - If you have any sugestion for functionalities, please post in the comments;

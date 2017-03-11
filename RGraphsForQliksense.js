@@ -293,6 +293,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 				dimArray[i] = layout.qHyperCube.qDataPages[0].qMatrix[i][0].qText;
 				measArray[i] = layout.qHyperCube.qDataPages[0].qMatrix[i][1].qText;
 				elementNumber[i] = layout.qHyperCube.qDataPages[0].qMatrix[i][0].qElemNumber;
+				arrayExplode[i]=0;
 			}
 			
 			
@@ -471,21 +472,22 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 				} else {
 					var qlikSelectionArray = index+1;
 				}*/
-				
 				that.selectValues(0, elementNumber[index], false);
 				
 				
-
-				if(arrayExplode[index]==0){
-					arrayExplode[index] = layout.explodedSegmentDist;
-				} else {
+				if(arrayExplode[index]!=0){
 					arrayExplode[index] = 0;
+				} else {
+					arrayExplode[index] = layout.explodedSegmentDist;
 				}
+				
 				obj.explodeSegment(arrayExplode, layout.explodedSegmentDist);
 				//arrayExplode[index]
 				obj.set('exploded', arrayExplode);
 				//obj.explodeSegment(index, layout.explodedSegmentDist);
 				e.stopPropagation();
+				
+				
 			}
 			
 			// On Click actions for Pie and Donut
