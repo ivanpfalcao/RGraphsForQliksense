@@ -261,10 +261,12 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 		},
 		paint: function ($element, layout) {
 			//debug propose only, please comment
-			console.log('Data returned: ', layout.qHyperCube);
+			//console.log('Data returned: ', layout.qHyperCube);
+			
             $element.empty();
 
             var that = this;
+			var objectId = that.options.id;
 			
 			var app = qlik.currApp(this);
 			
@@ -316,8 +318,10 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			
 			var html = '';
 			
+			var cvsId = objectId + "-cvs";
+			
 			var width = $element.width(), height = $element.height();
-			html+='<div id="canvas-wrapper"><canvas align="center" id="cvs" width="'+(width)+'" height="'+(height)+'">[No canvas support]</canvas></div>';
+			html+='<div id="canvas-wrapper"><canvas align="center" id="'+ cvsId + '" width="'+(width)+'" height="'+(height)+'">[No canvas support]</canvas></div>';
 			
 			$element.html(html);
 			
@@ -342,13 +346,13 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			catch(err) {
 			}		
 			*/
-			RGraph.Reset(document.getElementById('cvs'));
+			RGraph.Reset(document.getElementById(cvsId));
 			
 			switch(layout.chartTypeList) {
 				// Draws 3d pie chart
 				case "3d-pie":
 					chart = new RGraph.Pie({
-						id: 'cvs',
+						id: cvsId,
 						data: measArray,
 						options: {
 							gutterLeft: 50,
@@ -383,7 +387,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 				// Draws 3d donut chart
 				case "3d-donut":
 					chart = new RGraph.Pie({
-						id: 'cvs',
+						id: cvsId,
 						data: measArray,
 						options: {
 							gutterLeft: 50,
@@ -417,7 +421,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 						
 				case "3d-bar":
 					chart = new RGraph.Bar({
-						id: 'cvs',
+						id: cvsId,
 						data: measArray,
 						options: {
 							textAccessible: true,
