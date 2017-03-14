@@ -251,6 +251,37 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							defaultValue: 15
 						}
 					}
+				},	
+				colorsConfig: {
+					component: "expandable-items",
+					label: "Dimension Layout Configuration",
+					items: {
+						colorsConfigList: {                              
+							type: "array",                       
+							ref: "layoutList",                     
+							label: "Dimension Layout",    
+							itemTitleRef: "label",               
+							allowAdd: true,                      
+							allowRemove: true,                   
+							addTranslation: "Add Dimension Configuration",    					
+							items: {                                                             
+								label: {                           
+									type: "string",                                  
+									ref: "label",                    
+									label: "Dimension Name",                  
+									expression: "always",          
+									defaultValue: "Dimension Name"            
+								},
+								dimColor: {                           
+									type: "string",                                  
+									ref: "dimColor",                    
+									label: "Dimension Color",                  
+									expression: "always",          
+									defaultValue: "#000000"            
+								}
+							}
+						}
+					}
 				}
 			}
 		},
@@ -263,8 +294,8 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			//debug propose only, please comment
 			//console.log('Data returned: ', layout.qHyperCube);
 			
-            $element.empty();
-
+            $element.empty();		
+			
             var that = this;
 			var objectId = that.options.id;
 			
@@ -298,24 +329,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			
 			
 			var dimensionLength=layout.qHyperCube.qDataPages[0].qMatrix.length;
-			
-			
-			/*
-			var jsArray = [];
-			jsArray[0] = "./libraries/RGraph.common.core.js";
-			jsArray[1] = "./libraries/RGraph.common.dynamic.js";
-			jsArray[2] = "./libraries/RGraph.common.tooltips.js";
-			jsArray[3] = "./libraries/RGraph.pie.js";
-			
-			$("script[id='dynamic-js']").remove();
-			for (var i=0;i<jsArray.length - 1;i++){
-				var script = document.createElement( 'script' );
-				script.id='dynamic-js'
-				script.type = 'text/javascript';
-				script.src = jsArray[i];
-				$("head").append( script ); 
-			}
-			*/
+						
 			
 			var html = '';
 			
@@ -333,20 +347,31 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 				var labelsArray = [];
 			}
 			
+			
+			// create dimension array
+			var dictDimColors = [];
+			for (var i=0;i<layout.layoutList.length;i++) {
+				dictDimColors[layout.layoutList[i].label] = layout.layoutList[i].dimColor;		
+			}
+			
 			var tooltipsArray = [];
+			var colorsArray=[];
 			
 			for (var i = 0; i<=dimArray.length - 1; i++){
 				tooltipsArray[i] = dimArray[i] + ": " + measArray[i];
-				//alert(i + ":" + dimArray[i])
+				
+				//define colors
+				if (typeof dictDimColors[dimArray[i]] === "undefined"){
+					colorsArray[i] = '#d3d3d3';
+				} else {
+					colorsArray[i] = dictDimColors[dimArray[i]];
+				}
 			}
 			
 			
-			/*try {
-				chart.Clear();
-			}
-			catch(err) {
-			}		
-			*/
+
+			
+
 			RGraph.Reset(document.getElementById(cvsId));
 			
 			switch(layout.chartTypeList) {
@@ -363,11 +388,11 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							tooltips: tooltipsArray,
 							tooltipsEvent: 'onmousemove',					
 							labels: labelsArray,						
-							colors: palette,
+							colors: colorsArray,
 							variant: 'pie3d',
 							//radius: 100,
 							//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
-							labelsSticksColors:palette,
+							labelsSticksColors:colorsArray,
 							radius: layout.radiusValue,
 							shadowOffsety: 5,
 							shadowColor: '#aaa',
@@ -398,11 +423,11 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							tooltips: tooltipsArray,
 							tooltipsEvent: 'onmousemove',					
 							labels: labelsArray,						
-							colors: palette,
+							colors: colorsArray,
 							variant: 'donut3d',
 							//radius: 100,
 							//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
-							labelsSticksColors:palette,
+							labelsSticksColors:colorsArray,
 							radius: layout.radiusValue,
 							shadowOffsety: 5,
 							shadowColor: '#aaa',
