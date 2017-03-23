@@ -208,15 +208,29 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							}],
 							defaultValue: true
 						},
+						labelSticksDefColor: {
+							type: "boolean",
+							component: "switch",
+							label: "Labels Sticks Default Colors",
+							ref: "labelSticksDefColor",
+							options: [{
+								value: true,
+								label: "On"
+							}, {
+								value: false,
+								label: "Off"
+							}],
+							defaultValue: true
+						},						
 						labelsSticksLength: {
 							type: "number",
 							component: "slider",
 							label: "Labels Sticks Length",
 							ref: "labelsSticksLength",
 							min: 0,
-							max: 10,
+							max: 50,
 							step: 1,
-							defaultValue: 5
+							defaultValue: 8
 						},
 						labelsSticksLinewidth: {
 							type: "number",
@@ -279,6 +293,15 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 									expression: "always",          
 									defaultValue: "#000000"            
 								}
+								/*,
+								dimLabelColor: {                           
+									type: "string",                                  
+									ref: "dimLabelColor",                    
+									label: "Dimension Label Color",                  
+									expression: "always",          
+									defaultValue: "#000000"            
+								}
+								*/
 							}
 						}
 					}
@@ -350,22 +373,34 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 			
 			// create dimension array
 			var dictDimColors = [];
+			//var dictDimLabelColors = [];
 			for (var i=0;i<layout.layoutList.length;i++) {
-				dictDimColors[layout.layoutList[i].label] = layout.layoutList[i].dimColor;		
+				dictDimColors[layout.layoutList[i].label] = layout.layoutList[i].dimColor;
+				//dictDimLabelColors[layout.layoutList[i].label] = layout.layoutList[i].dimLabelColor;				
 			}
 			
 			var tooltipsArray = [];
 			var colorsArray=[];
+			var labelColorsArray=[];
 			
 			for (var i = 0; i<=dimArray.length - 1; i++){
 				tooltipsArray[i] = dimArray[i] + ": " + measArray[i];
 				
-				//define colors
+				//define Dim colors
 				if (typeof dictDimColors[dimArray[i]] === "undefined"){
 					colorsArray[i] = '#d3d3d3';
 				} else {
 					colorsArray[i] = dictDimColors[dimArray[i]];
 				}
+				
+				//define labels colors
+				/*
+				if (typeof dictDimColors[dimArray[i]] === "undefined"){
+					labelColorsArray[i] = '#000000';
+				} else {
+					labelColorsArray[i] = dictDimLabelColors[dimArray[i]];
+				}
+				*/
 			}
 			
 			
@@ -392,14 +427,20 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							variant: 'pie3d',
 							//radius: 100,
 							//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
-							labelsSticksColors:colorsArray,
+						
 							radius: layout.radiusValue,
 							shadowOffsety: 5,
 							shadowColor: '#aaa',
 							//exploded: [,,8],
 							textAccessible: false,
 							resizable: true,
-							labelsSticksList: layout.labelSticks,							
+							
+							
+							labelsSticks: layout.labelSticks,
+							labelsSticksUsecolors: layout.labelSticksDefColor,
+							//labelsSticksColors:labelColorsArray,
+							//textColor:['#ff0032'],							
+							
 							labelsSticksLength: layout.labelsSticksLength,
 							labelsSticksLinewidth: layout.labelsSticksLinewidth,							
 							textSize: layout.textFontSize,
@@ -427,14 +468,16 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							variant: 'donut3d',
 							//radius: 100,
 							//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
-							labelsSticksColors:colorsArray,
+
 							radius: layout.radiusValue,
 							shadowOffsety: 5,
 							shadowColor: '#aaa',
 							//exploded: [,,8],
 							textAccessible: false,
 							resizable: true,
-							labelsSticksList: layout.labelSticks,
+							labelsSticks: layout.labelSticks,
+							labelsSticksUsecolors: layout.labelSticksDefColor,
+							//labelsSticksColors:labelColorsArray,
 							labelsSticksLength: layout.labelsSticksLength,
 							labelsSticksLinewidth: layout.labelsSticksLinewidth,
 							textSize: layout.textFontSize,
@@ -477,6 +520,9 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							keyShadowBlur: 15,
 							resizable: true,
 							textSize: layout.textFontSize,
+							textColor:labelColorsArray,
+							labelsColors:labelColorsArray,
+							labelsIngraphColor:labelColorsArray,
 							labelsBold: layout.labelBold,							
 							eventsClick: onClickDimensionBar
 						}
