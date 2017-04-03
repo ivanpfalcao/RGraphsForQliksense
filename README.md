@@ -28,13 +28,22 @@
 
   11) In Pie and Donut settings -> Exploded Segment Distance; It sets the distance between the chart and the selected slice;
   
-  12) In Dimension Layout Configuration -> Dimension Layout; You may configure individually the colors of each dimension:
+  12) In Funnel Chart settings -> Funnel Chart Width; It sets the width of a funnel chart;
+  
+  13) In Funnel Chart settings -> Funnel Chart Heigth; It sets the heigth of a funnel chart;
+  
+  14) In Legend settings -> Legend Horizontally; It sets the horizontal position of the legend;
+  
+  15) In Legend settings -> Legend Vertically; It sets the vertical position of the legend;
+  
+  16) In Dimension Layout Configuration -> Dimension Layout; You may configure individually the colors of each dimension:
     - Dimension Name: you will configure the value of the dimension which you will set;
     - Dimension Color: the color of the dimension (hexadecimal);
     
     obs.: You may add as much Dimension configurations as you want. I have already tested with 20 dimensions, but in theory an unlimited number of configurations are possible;
   
 # Notes
+  - V0_8_2 implements the funnel chart. Please check chart options above.
   - V0_8_1 corrected a lot of bugs and added a lot a new features. Please check the new configurations above
   - This application is under development. Other functionalities will probably be added;
   - If you have any sugestion for functionalities, please post in the comments;
