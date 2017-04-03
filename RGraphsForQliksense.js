@@ -4,11 +4,14 @@ define( ["qlik"
 		,"./libraries/RGraph.common.dynamic"
 		,"./libraries/RGraph.common.tooltips"
 		,"./libraries/RGraph.common.resizing"		
-		//,"./libraries/RGraph.common.key"
+		,"./libraries/RGraph.common.key"
 		,"./libraries/RGraph.pie"
 		,"./libraries/RGraph.bar"
+		,"./libraries/RGraph.drawing.rect"
+		,"./libraries/RGraph.funnel"
+		//,"./libraries/RGraph.bipolar"					
 		],
-function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, RPie, RBar) {
+function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, RCommonKey, RPie, RBar, RDRRect, RBipolar) {
 	'use strict';
 	var chart;
 	var palette = [
@@ -142,6 +145,9 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							}, {
 								value: "3d-bar",
 								label: "3D Bar Chart"
+							}, {
+								value: "funnel",
+								label: "Funnel Chart"
 							}],
 							defaultValue: "3d-pie"
 						}							
@@ -266,6 +272,58 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 						}
 					}
 				},	
+				funnelChartSection: {
+					component: "expandable-items",
+					label: "Funnel Chart settings",
+					items: {
+						funnelChartWidth: {
+							type: "number",
+							component: "slider",
+							label: "Funnel Chart Width",
+							ref: "funnelChartWidth",
+							min: 1,
+							max: 300,
+							step: 1,
+							defaultValue: 75
+						},
+						funnelChartHeight: {
+							type: "number",
+							component: "slider",
+							label: "Funnel Chart Height",
+							ref: "funnelChartHeight",
+							min: 1,
+							max: 50,
+							step: 1,
+							defaultValue: 15
+						}						
+					}
+				},
+				legendPositionSection: {
+					component: "expandable-items",
+					label: "Legend settings",
+					items: {
+						legendPosH: {
+							type: "number",
+							component: "slider",
+							label: "Legend Horizontally",
+							ref: "legendPosH",
+							min: 1,
+							max: 1000,
+							step: 1,
+							defaultValue: 1
+						},
+						legendPosV: {
+							type: "number",
+							component: "slider",
+							label: "Legend Vertically",
+							ref: "legendPosV",
+							min: 1,
+							max: 1000,
+							step: 1,
+							defaultValue: 1
+						}						
+					}
+				},				
 				colorsConfig: {
 					component: "expandable-items",
 					label: "Dimension Layout Configuration",
@@ -528,6 +586,55 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 						}
 					}).draw();				
 					break;
+					
+					
+				// Draws funnel chart
+				
+				case "funnel":
+				/*
+					chart = new RGraph.Bipolar({
+						id: cvsId,
+						left: measArray,
+						right: measArray,
+						options: {
+							labels: labelsArray,
+							variant: '3d',
+							gutterBottom: 80,
+							margin: 5,
+							//noaxes: true,
+							//scaleZerostart: true,
+							colors: colorsArray,
+							colorsSequential: true,
+							tooltips: tooltipsArray,
+							eventsClick: onClickFunnel
+						}
+					}).draw();	
+					break;
+				*/			
+					measArray.push((Math.min.apply(null,measArray)/2));
+					chart = new RGraph.Funnel({
+						id: cvsId,
+						data: measArray,
+						options: {
+							tooltips: tooltipsArray,
+							//tooltipsEvent: 'onmousemove',					
+							key: labelsArray,	
+							//labels: labelsArray,
+							labelsSticks: true,
+							colors: colorsArray,
+							//colors: null,
+							shadow: true,
+							gutterLeft: layout.funnelChartWidth,
+							gutterRight: layout.funnelChartWidth,
+							gutterTop: layout.funnelChartHeight,
+							gutterBottom: layout.funnelChartHeight,
+							keyPositionX: layout.legendPosH,
+							keyPositionY: layout.legendPosV,
+							eventsClick: onClickDimensionBar
+						}
+					}).draw();
+					break;	
+				
 			}
 			
 			
@@ -561,7 +668,7 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 				
 			}
 			
-			// On Click actions for Pie and Donut
+			// On Click actions Bar Charts
 			function onClickDimensionBar (e, shape)
 			{
 				var index = shape.index;
