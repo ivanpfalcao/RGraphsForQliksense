@@ -11,7 +11,7 @@ define( ["qlik"
 		,"./libraries/RGraph.funnel"
 		//,"./libraries/RGraph.bipolar"					
 		],
-function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, RCommonKey, RPie, RBar, RDRRect, RBipolar) {
+function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, RCommonKey, RPie, RBar, RDRRect, RFunnel) {
 	'use strict';
 	var chart;
 	var palette = [
@@ -142,6 +142,12 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 							}, {
 								value: "3d-donut",
 								label: "3D Donut Chart"
+							}, {
+								value: "2d-pie",
+								label: "2D Pie Chart"
+							}, {
+								value: "2d-donut",
+								label: "2D Donut Chart"
 							}, {
 								value: "3d-bar",
 								label: "3D Bar Chart"
@@ -509,6 +515,47 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 					}).draw();
 					break;
 					
+				// Draws 2d pie chart
+				case "2d-pie":
+					chart = new RGraph.Pie({
+						id: cvsId,
+						data: measArray,
+						options: {
+							gutterLeft: 50,
+							gutterRight: 50,
+							linewidth: 0,
+							strokestyle: 'rgba(0,0,0,0)',
+							tooltips: tooltipsArray,
+							tooltipsEvent: 'onmousemove',					
+							labels: labelsArray,						
+							colors: colorsArray,
+							variant: 'pie',
+							//radius: 100,
+							//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
+						
+							radius: layout.radiusValue,
+							shadowOffsety: 5,
+							shadowColor: '#aaa',
+							//exploded: [,,8],
+							textAccessible: false,
+							resizable: true,
+							
+							
+							labelsSticks: layout.labelSticks,
+							labelsSticksUsecolors: layout.labelSticksDefColor,
+							//labelsSticksColors:labelColorsArray,
+							//textColor:['#ff0032'],							
+							
+							labelsSticksLength: layout.labelsSticksLength,
+							labelsSticksLinewidth: layout.labelsSticksLinewidth,							
+							textSize: layout.textFontSize,
+							labelsBold: layout.labelBold,							
+							eventsClick: onClickDimensionPieAndDonut
+							//eventsMousemove: onMouseMove
+						}
+					}).draw();
+					break;					
+					
 				// Draws 3d donut chart
 				case "3d-donut":
 					chart = new RGraph.Pie({
@@ -545,7 +592,8 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 						}
 					}).draw();
 					break;					
-						
+
+				// Draws 3d bar chart						
 				case "3d-bar":
 					chart = new RGraph.Bar({
 						id: cvsId,
@@ -586,7 +634,43 @@ function (qlik, RCommonCore, RCommonDynamic, RCommonTooltips, RCommonresizable, 
 						}
 					}).draw();				
 					break;
-					
+
+				// Draws 2d donut chart					
+				case "2d-donut":
+					chart = new RGraph.Pie({
+						id: cvsId,
+						data: measArray,
+						options: {
+							gutterLeft: 50,
+							gutterRight: 50,
+							linewidth: 0,
+							strokestyle: 'rgba(0,0,0,0)',
+							tooltips: tooltipsArray,
+							tooltipsEvent: 'onmousemove',					
+							labels: labelsArray,						
+							colors: colorsArray,
+							variant: 'donut',
+							//radius: 100,
+							//labelsSticksColors: [,'#cc0',,,'#0f0',,'black'],
+
+							radius: layout.radiusValue,
+							shadowOffsety: 5,
+							shadowColor: '#aaa',
+							//exploded: [,,8],
+							textAccessible: false,
+							resizable: true,
+							labelsSticks: layout.labelSticks,
+							labelsSticksUsecolors: layout.labelSticksDefColor,
+							//labelsSticksColors:labelColorsArray,
+							labelsSticksLength: layout.labelsSticksLength,
+							labelsSticksLinewidth: layout.labelsSticksLinewidth,
+							textSize: layout.textFontSize,
+							labelsBold: layout.labelBold,
+							eventsClick: onClickDimensionPieAndDonut
+							//eventsMousemove: onMouseMove
+						}
+					}).draw();
+					break;						
 					
 				// Draws funnel chart
 				
